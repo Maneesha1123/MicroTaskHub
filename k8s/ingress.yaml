@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: microtaskhub-ingress
+  namespace: microtaskhub
+  labels:
+    app.kubernetes.io/name: microtaskhub
+    app.kubernetes.io/component: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "4m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "30"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "30"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: microtaskhub.com
+      http:
+        paths:
+          - path: /users
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 8000
+          - path: /tasks
+            pathType: Prefix
+            backend:
+              service:
+                name: task-service
+                port:
+                  number: 8001
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80

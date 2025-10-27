@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MicroTaskHub</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="auth-overlay" class="auth-overlay hidden">
+      <form id="login-form" class="panel auth-panel">
+        <h2>Sign In</h2>
+        <label>Username <input type="text" name="username" autocomplete="username" required /></label>
+        <label>Password <input type="password" name="password" autocomplete="current-password" required /></label>
+        <button type="submit">Sign In</button>
+        <div class="feedback" id="login-feedback"></div>
+      </form>
+    </div>
+
+    <header>
+      <div class="header-content">
+        <div>
+          <h1>MicroTaskHub</h1>
+          <p>Lightweight task coordination demo.</p>
+        </div>
+        <button id="logout-button" class="logout-button" type="button">Logout</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel">
+        <h2>Create User</h2>
+        <form id="user-form">
+          <label>Email <input type="email" name="email" required /></label>
+          <label>Full Name <input type="text" name="full_name" required /></label>
+          <label>Role
+            <select name="role">
+              <option value="member">Member</option>
+              <option value="manager">Manager</option>
+            </select>
+          </label>
+          <button type="submit">Create User</button>
+        </form>
+        <div class="feedback" id="user-feedback"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Users</h2>
+        <ul id="user-list" class="user-list"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>Create Task</h2>
+        <form id="task-form">
+          <label>Title <input type="text" name="title" required /></label>
+          <label>Description <textarea name="description" rows="3"></textarea></label>
+          <label>Due Date <input type="date" name="due_date" /></label>
+          <label>Status
+            <select name="status">
+              <option value="todo">To Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+          </label>
+          <label>Assignee <select name="assignee_id" id="assignee-select"></select></label>
+          <button type="submit">Create Task</button>
+        </form>
+        <div class="feedback" id="task-feedback"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Tasks</h2>
+        <button id="refresh-tasks">Refresh</button>
+        <ul id="task-list" class="task-list"></ul>
+      </section>
+    </main>
+
+    <template id="task-template">
+      <li class="task-item">
+        <h3 data-field="title"></h3>
+        <p data-field="description"></p>
+        <p><strong>Status:</strong> <span data-field="status"></span></p>
+        <p><strong>Assignee:</strong> <span data-field="assignee"></span></p>
+        <p><strong>Due:</strong> <span data-field="due_date"></span></p>
+        <div class="item-actions">
+          <button type="button" data-action="edit-task" class="secondary-button">Edit</button>
+          <button type="button" data-action="delete-task" class="danger-button">Delete</button>
+        </div>
+      </li>
+    </template>
+
+    <template id="user-template">
+      <li class="user-item">
+        <div>
+          <p class="user-name" data-field="full_name"></p>
+            <span class="user-email" data-field="email"></span>
+            <span class="user-role" data-field="role"></span>
+        </div>
+        <div class="item-actions">
+          <button type="button" data-action="edit-user" class="secondary-button">Edit</button>
+          <button type="button" data-action="delete-user" class="danger-button">Delete</button>
+        </div>
+      </li>
+    </template>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

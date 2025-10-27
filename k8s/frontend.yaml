@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: microtaskhub
+  labels:
+    app.kubernetes.io/name: microtaskhub
+    app.kubernetes.io/component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: microtaskhub
+      app.kubernetes.io/component: frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: microtaskhub
+        app.kubernetes.io/component: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: docker.io/maneeshakanagiri/microtaskhub-frontend:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: USER_SERVICE_URL
+              value: http://user-service:8000
+            - name: TASK_SERVICE_URL
+              value: http://task-service:8001
+            - name: FRONTEND_AUTH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: microtaskhub-service-secrets
+                  key: FRONTEND_AUTH_USERNAME
+            - name: FRONTEND_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: microtaskhub-service-secrets
+                  key: FRONTEND_AUTH_PASSWORD
+            - name: FRONTEND_API_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: microtaskhub-service-secrets
+                  key: API_AUTH_TOKEN
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: microtaskhub
+  labels:
+    app.kubernetes.io/name: microtaskhub
+    app.kubernetes.io/component: frontend
+spec:
+  selector:
+    app.kubernetes.io/name: microtaskhub
+    app.kubernetes.io/component: frontend
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: http
