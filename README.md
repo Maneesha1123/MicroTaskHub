@@ -1,5 +1,6 @@
 # MicroTaskHub
 User name and password : admin and changeme
+
 MicroTaskHub is a microservice sample application that ships ready to run on Kubernetes. It contains:
 - **User Service** – FastAPI CRUD API whose data lives in PostgreSQL
 - **Task Service** – FastAPI API that stores work items and calls the User Service to validate task assignees
